@@ -20,7 +20,7 @@ const checkPhoneExist = async (phone) => {
 }
 const registerNewUser = async (rawData) => {
     //check email phone
-
+    console.log('raw',rawData);
     let checkEmail = await checkEmailExist(rawData.email)
     if (checkEmail) {
         return {
@@ -47,8 +47,8 @@ const registerNewUser = async (rawData) => {
             phone: rawData.phone,
         })
         return {
-            EC: 'A user is created',
-            EM: 0,
+            EM: 'A user is created',
+            EC: 0,
         }
     } catch (error) {
         console.log(error)
