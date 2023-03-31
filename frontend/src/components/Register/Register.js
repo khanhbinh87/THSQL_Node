@@ -1,17 +1,86 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Register.scss'
-import {  useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 const Register = () => {
-    let history = useHistory();
-    const handleLogin =() =>{
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [username, setUsername] = useState('')
+    const defaultValueInput = {
+        isValidEmail: true,
+        isValidPhone: true,
+        isValidPassword: true,
+        isValidConfirmPassword: true,
+    }
+    const [objCheckInput, setObjCheckInput] = useState(defaultValueInput)
+    let history = useHistory()
+    const handleLogin = () => {
         history.push('/login')
     }
-    useEffect(()=>{
-            axios.get('http://localhost:8080/api/test-api').then(data => {
-                console.log(data);
+    useEffect(() => {
+        // axios.get('http://localhost:8080/api/v1/test-api').then((data) => {
+        //     console.log(data)
+        // })
+    }, [])
+    const isValidInput = () => {
+        setObjCheckInput(defaultValueInput)
+        if (!email) {
+            toast.error('Email is required')
+            setObjCheckInput({ ...defaultValueInput, isValidEmail: false })
+            return false
+        }
+        const re = /\S+@\S+\.\S+/
+        if (!re.test(email)) {
+            toast.error('Please enter the valid email address')
+            setObjCheckInput({ ...defaultValueInput, isValidEmail: false })
+
+            return false
+        }
+
+        if (!phone) {
+            toast.error('Phone is required')
+            setObjCheckInput({ ...defaultValueInput, isValidPhone: false })
+
+            return false
+        }
+        if (!password) {
+            toast.error('Password is required')
+            setObjCheckInput({ ...defaultValueInput, isValidPassword: false })
+
+            return false
+        }
+        if (password !== confirmPassword) {
+            toast.error('Your password is not same')
+            setObjCheckInput({ ...defaultValueInput, isValidPassword: false })
+            return false
+        }
+        return true
+    }
+    const handleRegister = async () => {
+        let check = isValidInput()
+        if (check === true) {
+            axios.post('http://localhost:8080/api/v1/register',{
+                email,username,password,phone
             })
-    },[])
+            // let resData = await registerNewUser({
+            //     email,
+            //     password,
+            //     phone,
+            //     username,
+            // })
+            // let serverData = resData.data
+            // if (+serverData.EC === 0) {
+            //     toast.success('A user is created success')
+            //     history.push('/login')
+            // } else {
+            //     toast.error(serverData.EM)
+            // }
+        }
+    }
+
     return (
         <div className='register-container'>
             <div className='container'>
@@ -32,40 +101,40 @@ const Register = () => {
                             <div className='form-group>'>
                                 <label htmlFor='email'>Email address :</label>
                                 <input
-                                    // value={email}
-                                    // onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     id='email'
                                     type='text'
                                     placeholder='Email '
-                                    // className={
-                                    //     objCheckInput.isValidEmail
-                                    //         ? 'form-control'
-                                    //         : 'form-control is-invalid'
-                                    // }
+                                    className={
+                                        objCheckInput.isValidEmail
+                                            ? 'form-control'
+                                            : 'form-control is-invalid'
+                                    }
                                 />
                             </div>
                             <div className='form-group>'>
                                 <label htmlFor='phone'>Phone number :</label>
                                 <input
-                                    // value={phone}
-                                    // onChange={(e) => setPhone(e.target.value)}
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
                                     id='phone'
                                     type='text'
                                     placeholder='Phone number'
-                                    // className={
-                                    //     objCheckInput.isValidPhone
-                                    //         ? 'form-control'
-                                    //         : 'form-control is-invalid'
-                                    // }
+                                    className={
+                                        objCheckInput.isValidPhone
+                                            ? 'form-control'
+                                            : 'form-control is-invalid'
+                                    }
                                 />
                             </div>
                             <div className='form-group>'>
                                 <label htmlFor='username'>Username :</label>
                                 <input
-                                    // value={username}
-                                    // onChange={(e) =>
-                                    //     setUsername(e.target.value)
-                                    // }
+                                    value={username}
+                                    onChange={(e) =>
+                                        setUsername(e.target.value)
+                                    }
                                     id='username'
                                     type='text'
                                     placeholder='Username'
@@ -75,19 +144,19 @@ const Register = () => {
                             <div className='form-group>'>
                                 <label htmlFor='password'>Password :</label>
                                 <input
-                                    // value={password}
-                                    // onChange={(e) =>
-                                    //     setPassword(e.target.value)
-                                    // }
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     autoComplete=''
                                     id='password'
                                     type='password'
                                     placeholder='Password'
-                                    // className={
-                                    //     objCheckInput.isValidPassword
-                                    //         ? 'form-control'
-                                    //         : 'form-control is-invalid'
-                                    // }
+                                    className={
+                                        objCheckInput.isValidPassword
+                                            ? 'form-control'
+                                            : 'form-control is-invalid'
+                                    }
                                 />
                             </div>
 
@@ -96,24 +165,24 @@ const Register = () => {
                                     Re-enter password :
                                 </label>
                                 <input
-                                    // value={confirmPassword}
-                                    // onChange={(e) =>
-                                    //     setConfirmPassword(e.target.value)
-                                    // }
-                                    // autoComplete=''
+                                    value={confirmPassword}
+                                    onChange={(e) =>
+                                        setConfirmPassword(e.target.value)
+                                    }
+                                    autoComplete=''
                                     id='repassword'
                                     type='password'
                                     placeholder='Re-enter password'
-                                    // className={
-                                    //     objCheckInput.isValidConfirmPassword
-                                    //         ? 'form-control'
-                                    //         : 'form-control is-invalid'
-                                    // }
+                                    className={
+                                        objCheckInput.isValidConfirmPassword
+                                            ? 'form-control'
+                                            : 'form-control is-invalid'
+                                    }
                                 />
                             </div>
                             <button
                                 className='btn btn-primary'
-                                // onClick={() => handleRegister()}
+                                onClick={() => handleRegister()}
                             >
                                 Register
                             </button>
