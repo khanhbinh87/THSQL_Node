@@ -1,7 +1,11 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import './Login.scss'
 const Login = () => {
+    let history = useHistory()
+    const handleCreateNewUser = () => {
+        history.push('/register')
+    }
     return (
         <div className='login-container'>
             <div className='container'>
@@ -64,7 +68,7 @@ const Login = () => {
                             <div className='text-center'>
                                 <button
                                     className='btn btn-success'
-                                    // onClick={() => handleCreateNewUser()}
+                                    onClick={() => handleCreateNewUser()}
                                 >
                                     Create user
                                 </button>
