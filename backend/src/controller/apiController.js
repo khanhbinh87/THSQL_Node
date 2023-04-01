@@ -6,7 +6,6 @@ const testApi = (req, res) => {
     })
 }
 const handleRegister = async (req, res) => {
-    
     //check email password phone
     try {
         if (!req.body.email || !req.body.phone || !req.body.password) {
@@ -24,7 +23,7 @@ const handleRegister = async (req, res) => {
             })
         }
         let data = await loginRegisterService.registerNewUser(req.body)
-        console.log('data',data);
+       
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -38,15 +37,25 @@ const handleRegister = async (req, res) => {
         })
     }
 }
-const handleLogin = async(req,res)=>{
-    console.log(req.body);
-    return res.status(200).json({
-        message:'ok',
-        data:'test'
-    })
+const handleLogin = async (req, res) => {
+    try {
+        let data = await loginRegisterService.handleLoginUser(req.body)
+         return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT,
+        })
+    } catch (error) {
+        
+        return res.status(500).json({
+            EM: 'error form server',
+            EC: '-1',
+            DT: '',
+        })
+    }
 }
 module.exports = {
     testApi,
     handleRegister,
-    handleLogin
+    handleLogin,
 }
