@@ -1,10 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { loginUser } from '../../services/userService'
 import './Login.scss'
 const Login = () => {
     let history = useHistory()
     const handleCreateNewUser = () => {
         history.push('/register')
+    }
+    const [valueLogin, setValueLogin] = useState('')
+    const [password, setPassword] = useState('')
+    const defaultValue = {
+        isValidLogin: true,
+        isValidPassword: true,
+    }
+    useEffect(() => {
+        if (valueLogin) {
+            setObjValueLogin(defaultValue)
+        }
+
+        if (password) {
+            setObjValueLogin(defaultValue)
+        }
+    }, [valueLogin, password])
+    const [objValueLogin, setObjValueLogin] = useState(defaultValue)
+    const handleLogin = async() => {
+        setObjValueLogin(defaultValue)
+        if (!valueLogin) {
+            setObjValueLogin({ ...objValueLogin, isValidLogin: false })
+            toast.error('Please enter phone or email ')
+            return
+        }
+        if (!password) {
+            setObjValueLogin({ ...objValueLogin, isValidPassword: false })
+            toast.error('Please enter password ')
+            return
+        }
+        await loginUser(valueLogin,password)
     }
     return (
         <div className='login-container'>
@@ -26,33 +58,33 @@ const Login = () => {
                             <input
                                 type='text'
                                 placeholder='Email or phone number'
-                                // className={
-                                //     objValidLogin.isValidValueLogin
-                                //         ? 'form-control'
-                                //         : 'is-invalid form-control'
-                                // }
-                                // value={valueLogin}
-                                // onChange={(e) => {
-                                //     setValueLogin(e.target.value)
-                                // }}
+                                className={
+                                    objValueLogin.isValidLogin
+                                        ? 'form-control'
+                                        : 'is-invalid form-control'
+                                }
+                                value={valueLogin}
+                                onChange={(e) => {
+                                    setValueLogin(e.target.value)
+                                }}
                             />
                             <input
                                 type='password'
                                 placeholder='Password'
-                                // className={
-                                //     objValidLogin.isValidValuePassword
-                                //         ? 'form-control'
-                                //         : 'is-invalid form-control'
-                                // }
-                                // value={password}
-                                // onChange={(e) => {
-                                //     setPassword(e.target.value)
-                                // }}
+                                className={
+                                    objValueLogin.isValidPassword
+                                        ? 'form-control'
+                                        : 'is-invalid form-control'
+                                }
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value)
+                                }}
                                 // onKeyPress={(e) => handleKey(e)}
                             />
                             <button
                                 className='btn btn-primary'
-                                // onClick={() => handleLogin()}
+                                onClick={() => handleLogin()}
                             >
                                 Login
                             </button>
