@@ -14,17 +14,21 @@ const Login = () => {
         isValidLogin: true,
         isValidPassword: true,
     }
+    const handleKey = (e) => {
+        if (e.charCode === 13 && e.code === 'Enter') {
+            handleLogin()
+        }
+    }
     useEffect(() => {
-        if (valueLogin) {
-            setObjValueLogin(defaultValue)
+        let session = sessionStorage.getItem('account')
+        if (session) {
+            history.push('/')
+            window.location.reload('/')
         }
+    }, [])
 
-        if (password) {
-            setObjValueLogin(defaultValue)
-        }
-    }, [valueLogin, password])
     const [objValueLogin, setObjValueLogin] = useState(defaultValue)
-    const handleLogin = async() => {
+    const handleLogin = async () => {
         setObjValueLogin(defaultValue)
         if (!valueLogin) {
             setObjValueLogin({ ...objValueLogin, isValidLogin: false })
@@ -36,7 +40,20 @@ const Login = () => {
             toast.error('Please enter password ')
             return
         }
-        await loginUser(valueLogin,password)
+
+        let resData = await loginUser(valueLogin, password)
+
+        if (resData && resData.data && +resData.data.EC === 0) {
+            let data = {
+                isAuthenticated: true,
+                token: 'fake',
+            }
+            sessionStorage.setItem('account', JSON.stringify(data))
+            history.push('/users')
+            window.location.reload()
+        } else {
+            toast.error(resData.EM)
+        }
     }
     return (
         <div className='login-container'>
@@ -80,7 +97,7 @@ const Login = () => {
                                 onChange={(e) => {
                                     setPassword(e.target.value)
                                 }}
-                                // onKeyPress={(e) => handleKey(e)}
+                                onKeyPress={(e) => handleKey(e)}
                             />
                             <button
                                 className='btn btn-primary'
