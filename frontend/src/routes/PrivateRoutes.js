@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import {  Route, useHistory } from 'react-router-dom'
 
 const PrivateRoutes = (props) => {
     let history = useHistory()
@@ -9,7 +9,7 @@ const PrivateRoutes = (props) => {
             history.push('/login')
             window.location.reload()
         }
-    }, [])
+    }, [history])
     return (
         <>
             <Route path={props.path} component={props.component}></Route>

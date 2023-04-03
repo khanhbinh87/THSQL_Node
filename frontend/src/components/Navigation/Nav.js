@@ -4,12 +4,12 @@ import { NavLink, useLocation } from 'react-router-dom'
 const Nav = () => {
     const [isShow, setIsShow] = useState(true)
     let location = useLocation()
-    console.log(location);
+
     useEffect(() => {
         if (location.pathname === '/login') {
             setIsShow(false)
         }
-    }, [])
+    }, [location.pathname])
     return (
         <>
             {isShow && (

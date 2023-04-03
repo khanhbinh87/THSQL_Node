@@ -25,7 +25,7 @@ const Login = () => {
             history.push('/')
             window.location.reload('/')
         }
-    }, [])
+    }, [history])
 
     const [objValueLogin, setObjValueLogin] = useState(defaultValue)
     const handleLogin = async () => {
