@@ -79,10 +79,12 @@ const updateUser = async (id, email, username) => {
         console.log(error)
     }
 }
+
 module.exports = {
     createNewUser,
     getUserList,
     deleteUser,
     getUserById,
     updateUser,
+    
 }

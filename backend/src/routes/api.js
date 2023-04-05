@@ -2,6 +2,8 @@ import express from 'express'
 
 import apiController from '../controller/apiController'
 import useController from '../controller/useController'
+import groupController from '../controller/groupController'
+
 const router = express.Router()
 
 const initApiRoutes = (app) => {
@@ -13,9 +15,11 @@ const initApiRoutes = (app) => {
   router.post('/login',apiController.handleLogin)
 
   router.get('/user/read',useController.readFunc)
-  router.get('/user/create',useController.createFunc)
-  router.get('/user/update',useController.updateFunc)
-  router.get('/user/delete',useController.deleteFunc)
+  router.post('/user/create',useController.createFunc)
+  router.put('/user/update',useController.updateFunc)
+  router.delete('/user/delete',useController.deleteFunc)
+
+  router.get('/group/read',groupController.readFunc)
 
   return app.use('/api/v1', router)
 }

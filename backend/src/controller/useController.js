@@ -48,7 +48,15 @@ const updateFunc = async (req, res) => {
     }
 }
 const deleteFunc = async (req, res) => {
+   
+   
+    let data = await userApiService.deleteUser(req.body.id)
     try {
+        return res.status(200).json({
+            EM: data.EM,
+            EC: data.EC,
+            DT: data.DT,
+        })
     } catch (error) {
         return res.status(500).json({
             EM: 'error form server',
