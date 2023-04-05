@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col, Table } from 'react-bootstrap'
-import { getAllUser } from '../../services/userService'
+import { deleteUser, getAllUser } from '../../services/userService'
 import ReactPaginate from 'react-paginate'
+import ModalDelete from './ModalDelete'
+import { toast } from 'react-toastify'
+import ModalUser from './ModalUser'
+
 const User = () => {
-    const [listUsers, setListUsers] = useState('')
+    const [listUsers, setListUsers] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(3)
+    const [currentLimit, setCurrentLimit] = useState(2)
     const [totalPages, setTotalPages] = useState(0)
+    const [show, setShow] = useState(false)
+    const [userDelete, setUserDelete] = useState({})
+    
     useEffect(() => {
         fetchData()
     }, [currentPage])
@@ -15,12 +22,30 @@ const User = () => {
         if (res && res.data && res.data.EC === 0) {
             setListUsers(res.data.DT.users)
             setTotalPages(res.data.DT.totalPages)
-           
         }
     }
 
     const handlePageClick = (event) => {
         setCurrentPage(+event.selected + 1)
+    }
+    const handleDelete = async (item) => {
+        setUserDelete(item)
+        setShow(true)
+    }
+    const handleClose = () => {
+        setUserDelete({})
+
+        setShow(false)
+    }
+    const confirmDelete = async () => {
+        let res = await deleteUser(userDelete)
+        if (res && res.data.EC === 0) {
+            toast.success(res.data.EM)
+            await fetchData()
+            setShow(false)
+        } else {
+            toast.error(res.data.EC)
+        }
     }
     return (
         <Container>
@@ -70,8 +95,17 @@ const User = () => {
                                                     : ''}
                                             </td>
                                             <td>
-                                                <button className='btn btn-warning'>Edit</button>
-                                                <button className='btn btn-danger mx-1'>Delete</button>
+                                                <button className='btn btn-warning'>
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    className='btn btn-danger mx-1'
+                                                    onClick={() =>
+                                                        handleDelete(item)
+                                                    }
+                                                >
+                                                    Delete
+                                                </button>
                                             </td>
                                         </tr>
                                     )
@@ -107,6 +141,18 @@ const User = () => {
                     renderOnZeroPageCount={null}
                 />
             )}
+            <ModalDelete
+                handleClose={handleClose}
+                show={show}
+                confirmDelete={confirmDelete}
+                userDelete={userDelete}
+            />
+            <ModalUser
+                handleClose={handleClose}
+                show={show}
+                title ="Create a new user"
+
+            />
         </Container>
     )
 }
