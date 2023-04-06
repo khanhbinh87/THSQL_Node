@@ -9,11 +9,11 @@ import ModalUser from './ModalUser'
 const User = () => {
     const [listUsers, setListUsers] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(2)
+    const [currentLimit, setCurrentLimit] = useState(4)
     const [totalPages, setTotalPages] = useState(0)
     const [show, setShow] = useState(false)
     const [userDelete, setUserDelete] = useState({})
-    
+    const [showModalUser,setShowModalUser] = useState(false)
     useEffect(() => {
         fetchData()
     }, [currentPage])
@@ -47,6 +47,9 @@ const User = () => {
             toast.error(res.data.EC)
         }
     }
+    const handleUserClose = () => {
+        setShowModalUser(false)
+    }
     return (
         <Container>
             <div className='table-header '>
@@ -61,6 +64,7 @@ const User = () => {
                         <button
                             className='btn btn-primary '
                             style={{ marginLeft: '2px' }}
+                            onClick={() => setShowModalUser(true)}
                         >
                             Add new user
                         </button>
@@ -148,8 +152,8 @@ const User = () => {
                 userDelete={userDelete}
             />
             <ModalUser
-                handleClose={handleClose}
-                show={show}
+                handleUserClose={handleUserClose}
+                show={showModalUser}
                 title ="Create a new user"
 
             />

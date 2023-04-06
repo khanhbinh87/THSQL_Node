@@ -27,4 +27,8 @@ const deleteUser = (user) => {
 const fetchGroup = ()=>{
     return axios.get('http://localhost:8080/api/v1/group/read')
 }
-export { registerNewUser, loginUser, getAllUser, deleteUser ,fetchGroup}
+const createNewUser = (data)=>{
+   
+    return axios.post('http://localhost:8080/api/v1/user/create',{...data})
+}
+export { registerNewUser, loginUser, getAllUser, deleteUser ,fetchGroup,createNewUser}
