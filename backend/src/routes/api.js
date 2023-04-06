@@ -20,6 +20,8 @@ const initApiRoutes = (app) => {
   router.delete('/user/delete',useController.deleteFunc)
 
   router.get('/group/read',groupController.readFunc)
+  
+
 
   return app.use('/api/v1', router)
 }
