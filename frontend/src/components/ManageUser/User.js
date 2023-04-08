@@ -13,7 +13,9 @@ const User = () => {
     const [totalPages, setTotalPages] = useState(0)
     const [show, setShow] = useState(false)
     const [userDelete, setUserDelete] = useState({})
-    const [showModalUser,setShowModalUser] = useState(false)
+    const [showModalUser, setShowModalUser] = useState(false)
+    const [action, setAction] = useState('CREATE')
+    const [modalUser, setModalUser] = useState('')
     useEffect(() => {
         fetchData()
     }, [currentPage])
@@ -47,8 +49,16 @@ const User = () => {
             toast.error(res.data.EC)
         }
     }
-    const handleUserClose = () => {
+    const handleUserClose = async () => {
         setShowModalUser(false)
+        setAction('CREATE')
+        await fetchData()
+    }
+    const handleEdit = (item) => {
+
+        setAction('UPDATE')
+        setShowModalUser(true)
+        setModalUser(item)
     }
     return (
         <Container>
@@ -64,7 +74,11 @@ const User = () => {
                         <button
                             className='btn btn-primary '
                             style={{ marginLeft: '2px' }}
-                            onClick={() => setShowModalUser(true)}
+                            onClick={() => {
+                                setShowModalUser(true)
+                                setAction('CREATE')
+                                setModalUser('')
+                            }}
                         >
                             Add new user
                         </button>
@@ -89,7 +103,12 @@ const User = () => {
                                 {listUsers.map((item, index) => {
                                     return (
                                         <tr key={`row-${index}`}>
-                                            <td>{index + 1}</td>
+                                            <td>
+                                                {(currentPage - 1) *
+                                                    currentLimit +
+                                                    index +
+                                                    1}
+                                            </td>
                                             <td>{item.id}</td>
                                             <td>{item.email}</td>
                                             <td>{item.username}</td>
@@ -99,7 +118,12 @@ const User = () => {
                                                     : ''}
                                             </td>
                                             <td>
-                                                <button className='btn btn-warning'>
+                                                <button
+                                                    className='btn btn-warning'
+                                                    onClick={() =>
+                                                        handleEdit(item)
+                                                    }
+                                                >
                                                     Edit
                                                 </button>
                                                 <button
@@ -154,8 +178,8 @@ const User = () => {
             <ModalUser
                 handleUserClose={handleUserClose}
                 show={showModalUser}
-                title ="Create a new user"
-
+                action={action}
+                modalUser={modalUser}
             />
         </Container>
     )

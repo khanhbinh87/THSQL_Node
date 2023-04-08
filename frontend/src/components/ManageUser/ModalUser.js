@@ -6,7 +6,7 @@ import { createNewUser, fetchGroup } from '../../services/userService'
 import { toast } from 'react-toastify'
 import _ from 'lodash'
 const ModalUser = (props) => {
-    const { handleUserClose, show, title } = props
+    const { handleUserClose, show, action, modalUser } = props
 
     const defaultUserData = {
         email: '',
@@ -32,9 +32,24 @@ const ModalUser = (props) => {
     useEffect(() => {
         getGroups()
     }, [])
+    useEffect(() => {
+        if (action === 'UPDATE') {
+            setuserData({
+                ...modalUser,
+                group: modalUser.Group ? modalUser.Group.id : '',
+            })
+        }
+    }, [modalUser])
+    useEffect(() => {
+        if (action === 'CREATE') {
+            if (userGroups && userGroups.length > 0) {
+                setuserData({ ...userData, group: userGroups[0].id })
+            }
+        }
+    }, [action])
     const getGroups = async () => {
         let res = await fetchGroup()
-        
+
         if (res && res.data && res.data.EC === 0) {
             setUserGroups(res.data.DT)
             if (res && res.data && res.data.DT.length > 0) {
@@ -76,18 +91,33 @@ const ModalUser = (props) => {
             })
             if (res && res.data.EC === 0) {
                 setuserData({ ...defaultUserData, group: userGroups[0].id })
-                handleUserClose()
+                toast.success(res.data.EM)
+
+                hideModal()
             } else {
-                toast.error('Error create user')
+                toast.error(res.data.EM)
+                let validInput = _.cloneDeep(defaultInputValue)
+                validInput[res.data.DT] = false
+                setInputValue(validInput)
             }
         }
+    }
+
+    const hideModal = () => {
+        handleUserClose()
+        setuserData(defaultUserData)
+        setInputValue(defaultInputValue)
     }
     return (
         <div>
             <>
-                <Modal show={show} onHide={handleUserClose} size='lg'>
+                <Modal show={show} onHide={hideModal} size='lg'>
                     <Modal.Header closeButton>
-                        <Modal.Title>{title}</Modal.Title>
+                        <Modal.Title>
+                            {action === 'CREATE'
+                                ? 'Create a new user'
+                                : 'Edit user'}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body className='modal-body'>
                         <form className='row'>
@@ -97,6 +127,9 @@ const ModalUser = (props) => {
                                     <span className='red'>*</span>)
                                 </label>
                                 <input
+                                    disabled={
+                                        action === 'CREATE' ? false : true
+                                    }
                                     type='email'
                                     className={
                                         inputValue.email
@@ -115,8 +148,11 @@ const ModalUser = (props) => {
                                     )
                                 </label>
                                 <input
+                                    disabled={
+                                        action === 'CREATE' ? false : true
+                                    }
                                     type='text'
-                                     className={
+                                    className={
                                         inputValue.phone
                                             ? 'form-control'
                                             : 'form-control is-invalid'
@@ -143,22 +179,32 @@ const ModalUser = (props) => {
                                 />
                             </div>
                             <div className=' col-6'>
-                                <label className='form-label'>
-                                    Password (<span className='red'>*</span>)
-                                </label>
-                                <input
-                                    type='password'
-                                    className={
-                                        inputValue.password
-                                            ? 'form-control'
-                                            : 'form-control is-invalid'
-                                    }
-                                    value={userData.password}
-                                    onChange={(e) =>
-                                        handleInput(e.target.value, 'password')
-                                    }
-                                    autoComplete='on'
-                                />
+                                {action === 'CREATE' ? (
+                                    <>
+                                        <label className='form-label'>
+                                            Password (
+                                            <span className='red'>*</span>)
+                                        </label>
+                                        <input
+                                            type='password'
+                                            className={
+                                                inputValue.password
+                                                    ? 'form-control'
+                                                    : 'form-control is-invalid'
+                                            }
+                                            value={userData.password}
+                                            onChange={(e) =>
+                                                handleInput(
+                                                    e.target.value,
+                                                    'password'
+                                                )
+                                            }
+                                            autoComplete='on'
+                                        />
+                                    </>
+                                ) : (
+                                    ''
+                                )}
                             </div>
                             <div className=' col-12'>
                                 <label className='form-label'>Address</label>
@@ -176,6 +222,7 @@ const ModalUser = (props) => {
 
                                 <select
                                     className='form-select'
+                                    value={userData.sex}
                                     onChange={(e) =>
                                         handleInput(e.target.value, 'sex')
                                     }
@@ -192,6 +239,7 @@ const ModalUser = (props) => {
 
                                 <select
                                     className='form-select'
+                                    value={userData.group}
                                     onChange={(e) =>
                                         handleInput(e.target.value, 'group')
                                     }
@@ -220,7 +268,7 @@ const ModalUser = (props) => {
                             variant='primary'
                             onClick={() => handleConfirmUser()}
                         >
-                            Save
+                            {action === 'CREATE' ? 'Save' : 'Update'}
                         </Button>
                     </Modal.Footer>
                 </Modal>
