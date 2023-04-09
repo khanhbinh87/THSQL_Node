@@ -87,16 +87,48 @@ const createNewUser = async (data) => {
     } catch (error) {}
 }
 const updateUser = async (data) => {
+
     try {
+        if(!data.groupId){
+            return {
+                EM:"Error width empty groupID",
+                EC:1,
+                DT:'group'
+            }
+        }
         let user = await db.User.findOne({
             where: {
-                id,
+                id: data.id,
             },
         })
+
         if (user) {
-            user.save({})
+            await user.update({
+                username: data.username,
+                address: data.address,
+                sex:data.sex,
+                groupId:data.groupId
+            })
+            return {
+                EM: 'update success ',
+                EC: 0,
+                DT: "",
+            }
+        }else{
+            return {
+                EM: 'user not found  ',
+                EC: 2,
+                DT: "",
+            }
         }
-    } catch (error) {}
+        
+    } catch (error) {
+        return {
+            EM: 'something wrongs with service',
+            EC: 1,
+            DT: [],
+        }
+    }
 }
 const deleteUser = async (id) => {
     try {
@@ -120,7 +152,13 @@ const deleteUser = async (id) => {
                 DT: [],
             }
         }
-    } catch (error) {}
+    } catch (error) {
+        return {
+            EM: 'something went wrong service',
+            EC: -1,
+            DT: [],
+        }
+    }
 }
 
 module.exports = {
