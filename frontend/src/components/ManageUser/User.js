@@ -21,9 +21,10 @@ const User = () => {
     }, [currentPage])
     const fetchData = async () => {
         let res = await getAllUser(currentPage, currentLimit)
-        if (res && res.data && res.data.EC === 0) {
-            setListUsers(res.data.DT.users)
-            setTotalPages(res.data.DT.totalPages)
+
+        if (res && res.EC === 0) {
+            setListUsers(res.DT.users)
+            setTotalPages(res.DT.totalPages)
         }
     }
 
@@ -42,12 +43,12 @@ const User = () => {
     }
     const confirmDelete = async () => {
         let res = await deleteUser(userDelete)
-        if (res && res.data.EC === 0) {
-            toast.success(res.data.EM)
+        if (res && res.EC === 0) {
+            toast.success(res.EM)
             await fetchData()
             setShow(false)
         } else {
-            toast.error(res.data.EC)
+            toast.error(res.EC)
         }
     }
     const handleUserClose = async () => {
@@ -66,6 +67,7 @@ const User = () => {
         await fetchData()
         
     }
+
     return (
         <Container>
             <div className='table-header '>

@@ -43,7 +43,7 @@ const Login = () => {
 
         let resData = await loginUser(valueLogin, password)
 
-        if (resData && resData.data && +resData.data.EC === 0) {
+        if (resData  && +resData.EC === 0) {
             let data = {
                 isAuthenticated: true,
                 token: 'fake',
