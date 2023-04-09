@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import './User.scss'
-import { createNewUser, fetchGroup } from '../../services/userService'
+import {
+    createNewUser,
+    fetchGroup,
+    updateUser,
+} from '../../services/userService'
 import { toast } from 'react-toastify'
 import _ from 'lodash'
 const ModalUser = (props) => {
@@ -66,6 +70,9 @@ const ModalUser = (props) => {
         setuserData(_userData)
     }
     const checkValidateInputs = () => {
+        if (action === 'UPDATE') {
+            return true
+        }
         setInputValue(defaultInputValue)
         let arr = ['email', 'phone', 'password', 'group']
         let check = true
@@ -85,12 +92,24 @@ const ModalUser = (props) => {
     const handleConfirmUser = async () => {
         let check = checkValidateInputs()
         if (check) {
-            let res = await createNewUser({
-                ...userData,
-                groupId: userData['group'],
-            })
+            let res =
+                action === 'CREATE'
+                    ? await createNewUser({
+                          ...userData,
+                          groupId: userData['group'],
+                      })
+                    : await updateUser({
+                          ...userData,
+                          groupId: userData['group'],
+                      })
             if (res && res.data.EC === 0) {
-                setuserData({ ...defaultUserData, group: userGroups[0].id })
+                setuserData({
+                    ...defaultUserData,
+                    group:
+                        userGroups && userGroups.length > 0
+                            ? userGroups[0].id
+                            : '',
+                })
                 toast.success(res.data.EM)
 
                 hideModal()
@@ -108,10 +127,16 @@ const ModalUser = (props) => {
         setuserData(defaultUserData)
         setInputValue(defaultInputValue)
     }
+
     return (
         <div>
             <>
-                <Modal show={show} onHide={hideModal} size='lg'>
+                <Modal
+                    show={show}
+                    onHide={() => hideModal()}
+                    size='lg'
+                    keyboard={false}
+                >
                     <Modal.Header closeButton>
                         <Modal.Title>
                             {action === 'CREATE'
@@ -261,7 +286,7 @@ const ModalUser = (props) => {
                         </form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant='secondary' onClick={handleUserClose}>
+                        <Button variant='secondary' onClick={() => hideModal()}>
                             Close
                         </Button>
                         <Button

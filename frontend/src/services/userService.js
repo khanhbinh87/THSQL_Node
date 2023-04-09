@@ -31,4 +31,8 @@ const createNewUser = (data)=>{
    
     return axios.post('http://localhost:8080/api/v1/user/create',{...data})
 }
-export { registerNewUser, loginUser, getAllUser, deleteUser ,fetchGroup,createNewUser}
+const updateUser = (data) => {
+    return axios.put('http://localhost:8080/api/v1/user/update',{...data})
+
+}
+export { registerNewUser, loginUser, getAllUser, deleteUser ,fetchGroup,createNewUser,updateUser}

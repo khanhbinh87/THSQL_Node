@@ -5,11 +5,11 @@ import ReactPaginate from 'react-paginate'
 import ModalDelete from './ModalDelete'
 import { toast } from 'react-toastify'
 import ModalUser from './ModalUser'
-
+import './User.scss'
 const User = () => {
     const [listUsers, setListUsers] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(4)
+    const [currentLimit, setCurrentLimit] = useState(5)
     const [totalPages, setTotalPages] = useState(0)
     const [show, setShow] = useState(false)
     const [userDelete, setUserDelete] = useState({})
@@ -28,6 +28,7 @@ const User = () => {
     }
 
     const handlePageClick = (event) => {
+        
         setCurrentPage(+event.selected + 1)
     }
     const handleDelete = async (item) => {
@@ -55,10 +56,15 @@ const User = () => {
         await fetchData()
     }
     const handleEdit = (item) => {
-
         setAction('UPDATE')
         setShowModalUser(true)
         setModalUser(item)
+    }
+    const handleRefresh = async()=>{
+       
+        
+        await fetchData()
+        
     }
     return (
         <Container>
@@ -70,7 +76,8 @@ const User = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <button className='btn btn-success'>Refresh</button>
+                        <button className='btn btn-success' onClick={() => handleRefresh()}>
+                        <i className="fa fa-refresh px-2" ></i>Refresh</button>
                         <button
                             className='btn btn-primary '
                             style={{ marginLeft: '2px' }}
@@ -80,7 +87,7 @@ const User = () => {
                                 setModalUser('')
                             }}
                         >
-                            Add new user
+                           <i className="fa fa-plus px-2"></i> Add new user
                         </button>
                     </Col>
                 </Row>
@@ -118,22 +125,24 @@ const User = () => {
                                                     : ''}
                                             </td>
                                             <td>
-                                                <button
-                                                    className='btn btn-warning'
+                                                <span
+                                                    className='edit'
+                                                    title="Edit"
                                                     onClick={() =>
                                                         handleEdit(item)
                                                     }
                                                 >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    className='btn btn-danger mx-1'
+                                                    <i className='fa fa-pencil orange'></i>
+                                                </span>
+                                                <span
+                                                    className='mx-2 delete'
+                                                    title="Delete"
                                                     onClick={() =>
                                                         handleDelete(item)
                                                     }
                                                 >
-                                                    Delete
-                                                </button>
+                                                <i className="fa fa-trash red" ></i>
+                                                </span>
                                             </td>
                                         </tr>
                                     )
