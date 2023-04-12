@@ -23,7 +23,7 @@ const handleRegister = async (req, res) => {
             })
         }
         let data = await loginRegisterService.registerNewUser(req.body)
-       
+
         return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
@@ -40,13 +40,14 @@ const handleRegister = async (req, res) => {
 const handleLogin = async (req, res) => {
     try {
         let data = await loginRegisterService.handleLoginUser(req.body)
-         return res.status(200).json({
+
+        res.cookie('jwt', data.DT.access_token, { maxAge: 60 * 60 * 1000,httpOnly:true })
+        return res.status(200).json({
             EM: data.EM,
             EC: data.EC,
             DT: data.DT,
         })
     } catch (error) {
-        
         return res.status(500).json({
             EM: 'error form server',
             EC: '-1',
