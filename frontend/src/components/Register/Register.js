@@ -21,9 +21,7 @@ const Register = () => {
     const handleLogin = () => {
         history.push('/login')
     }
-    useEffect(() => {
-        
-    }, [])
+
     const isValidInput = () => {
         setObjCheckInput(defaultValueInput)
         if (!email) {
@@ -61,15 +59,13 @@ const Register = () => {
     const handleRegister = async () => {
         let check = isValidInput()
         if (check === true) {
-           
-            let resData = await registerNewUser(
+            let serverData = await registerNewUser(
                 email,
                 phone,
                 username,
-                password,
+                password
             )
-           
-            let serverData = resData.data
+
             if (+serverData.EC === 0) {
                 toast.success('A user is created success')
                 history.push('/login')

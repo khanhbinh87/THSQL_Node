@@ -17,6 +17,15 @@ const User = () => {
     const [action, setAction] = useState('CREATE')
     const [modalUser, setModalUser] = useState('')
     useEffect(() => {
+        let c = document.cookie
+            .split(';')
+            .reduce(
+                (ac, cv, i) =>
+                    Object.assign(ac, { [cv.split('=')[0]]: cv.split('=')[1] }),
+                {}
+            )
+
+        console.log(c)
         fetchData()
     }, [currentPage])
     const fetchData = async () => {
@@ -29,7 +38,6 @@ const User = () => {
     }
 
     const handlePageClick = (event) => {
-        
         setCurrentPage(+event.selected + 1)
     }
     const handleDelete = async (item) => {
@@ -61,11 +69,8 @@ const User = () => {
         setShowModalUser(true)
         setModalUser(item)
     }
-    const handleRefresh = async()=>{
-       
-        
+    const handleRefresh = async () => {
         await fetchData()
-        
     }
 
     return (
@@ -78,8 +83,12 @@ const User = () => {
                 </Row>
                 <Row>
                     <Col>
-                        <button className='btn btn-success' onClick={() => handleRefresh()}>
-                        <i className="fa fa-refresh px-2" ></i>Refresh</button>
+                        <button
+                            className='btn btn-success'
+                            onClick={() => handleRefresh()}
+                        >
+                            <i className='fa fa-refresh px-2'></i>Refresh
+                        </button>
                         <button
                             className='btn btn-primary '
                             style={{ marginLeft: '2px' }}
@@ -89,7 +98,7 @@ const User = () => {
                                 setModalUser('')
                             }}
                         >
-                           <i className="fa fa-plus px-2"></i> Add new user
+                            <i className='fa fa-plus px-2'></i> Add new user
                         </button>
                     </Col>
                 </Row>
@@ -129,7 +138,7 @@ const User = () => {
                                             <td>
                                                 <span
                                                     className='edit'
-                                                    title="Edit"
+                                                    title='Edit'
                                                     onClick={() =>
                                                         handleEdit(item)
                                                     }
@@ -138,12 +147,12 @@ const User = () => {
                                                 </span>
                                                 <span
                                                     className='mx-2 delete'
-                                                    title="Delete"
+                                                    title='Delete'
                                                     onClick={() =>
                                                         handleDelete(item)
                                                     }
                                                 >
-                                                <i className="fa fa-trash red" ></i>
+                                                    <i className='fa fa-trash red'></i>
                                                 </span>
                                             </td>
                                         </tr>

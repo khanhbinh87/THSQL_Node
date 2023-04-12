@@ -6,6 +6,8 @@ const instance = axios.create({
   
   // Alter defaults after instance has been created
 //   instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+
+instance.defaults.withCredentials = true;
 instance.interceptors.request.use(
     function (config) {
         // Do something before request is sent
