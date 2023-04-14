@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { loginUser } from '../../services/userService'
+import { UserContext } from '../../Context/UserContext'
 import './Login.scss'
 const Login = () => {
+    const { loginContext } = React.useContext(UserContext)
     let history = useHistory()
     const handleCreateNewUser = () => {
         history.push('/register')
@@ -43,14 +45,20 @@ const Login = () => {
 
         let resData = await loginUser(valueLogin, password)
 
-        if (resData  && +resData.EC === 0) {
+        if (resData && +resData.EC === 0) {
+            let groupWithRoles = resData.DT.groupWithRoles
+            let email = resData.DT.email
+            let username = resData.DT.username
+            let token = resData.DT.access_token
             let data = {
                 isAuthenticated: true,
-                token: 'fake',
+                token,
+                account: { groupWithRoles, email, username },
             }
             sessionStorage.setItem('account', JSON.stringify(data))
+            loginContext(data)
             history.push('/users')
-            window.location.reload()
+            // window.location.reload()
         } else {
             toast.error(resData.EM)
         }

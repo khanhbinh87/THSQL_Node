@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {  Route, useHistory } from 'react-router-dom'
-
+import { UserContext } from '../Context/UserContext'
 const PrivateRoutes = (props) => {
+    let {user} = useContext(UserContext)
+    console.log(user);
     let history = useHistory()
     useEffect(() => {
         let session = sessionStorage.getItem('account')
