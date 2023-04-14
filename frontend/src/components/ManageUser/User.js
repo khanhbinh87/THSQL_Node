@@ -25,7 +25,7 @@ const User = () => {
                 {}
             )
 
-        console.log(c)
+       
         fetchData()
     }, [currentPage])
     const fetchData = async () => {
