@@ -89,6 +89,7 @@ const handleLoginUser = async (rawData) => {
                     EM: 'ok',
                     EC: 0,
                     DT: {
+                       
                         access_token: token,
                         groupWithRoles
                     },
