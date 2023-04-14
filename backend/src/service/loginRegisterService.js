@@ -83,15 +83,15 @@ const handleLoginUser = async (rawData) => {
             }
             let token = createJWT(payload)
 
-
             if (isCheckPass) {
                 return {
                     EM: 'ok',
                     EC: 0,
                     DT: {
-                       
                         access_token: token,
-                        groupWithRoles
+                        groupWithRoles,
+                        email: user.email,
+                        username:user.username
                     },
                 }
             }

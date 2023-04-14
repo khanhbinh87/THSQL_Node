@@ -7,8 +7,8 @@ import { checkUserJWT, checkUserPermission } from '../middleware/JWTActions'
 const router = express.Router()
 
 const initApiRoutes = (app) => {
-  
-    router.all('*', checkUserJWT, checkUserPermission)
+
+    // router.all('*', checkUserJWT, checkUserPermission)
 
     router.get('/test-api', apiController.testApi)
     router.post('/register', apiController.handleRegister)
