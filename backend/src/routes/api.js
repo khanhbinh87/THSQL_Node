@@ -8,13 +8,14 @@ const router = express.Router()
 
 const initApiRoutes = (app) => {
 
-    // router.all('*', checkUserJWT, checkUserPermission)
+    router.all('*', checkUserJWT, checkUserPermission)
 
     router.get('/test-api', apiController.testApi)
     router.post('/register', apiController.handleRegister)
     router.get('/register', apiController.handleRegister)
     router.post('/login', apiController.handleLogin)
 
+    router.get('/account', useController.getUserAccount)
     router.get('/user/read', useController.readFunc)
     router.post('/user/create', useController.createFunc)
     router.put('/user/update', useController.updateFunc)
