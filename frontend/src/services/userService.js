@@ -30,6 +30,9 @@ const createNewUser = (data) => {
 const updateUser = (data) => {
     return axios.put('/api/v1/user/update', { ...data })
 }
+const getUserAccount = () => {
+    return axios.get('/account')
+}
 export {
     registerNewUser,
     loginUser,
@@ -38,4 +41,5 @@ export {
     fetchGroup,
     createNewUser,
     updateUser,
+    getUserAccount
 }

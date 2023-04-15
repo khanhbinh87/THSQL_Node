@@ -1,35 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { loginUser } from '../../services/userService'
 import { UserContext } from '../../Context/UserContext'
 import './Login.scss'
 const Login = () => {
-    const { loginContext } = React.useContext(UserContext)
-    let history = useHistory()
-    const handleCreateNewUser = () => {
-        history.push('/register')
-    }
     const [valueLogin, setValueLogin] = useState('')
     const [password, setPassword] = useState('')
     const defaultValue = {
         isValidLogin: true,
         isValidPassword: true,
     }
+
+    const [objValueLogin, setObjValueLogin] = useState(defaultValue)
+
+    let history = useHistory()
+
+    const { loginContext } = React.useContext(UserContext)
+
+    const handleCreateNewUser = () => {
+        history.push('/register')
+    }
+
     const handleKey = (e) => {
         if (e.charCode === 13 && e.code === 'Enter') {
             handleLogin()
         }
     }
-    useEffect(() => {
-        let session = sessionStorage.getItem('account')
-        if (session) {
-            history.push('/')
-            window.location.reload('/')
-        }
-    }, [history])
 
-    const [objValueLogin, setObjValueLogin] = useState(defaultValue)
     const handleLogin = async () => {
         setObjValueLogin(defaultValue)
         if (!valueLogin) {
@@ -55,10 +53,9 @@ const Login = () => {
                 token,
                 account: { groupWithRoles, email, username },
             }
-            sessionStorage.setItem('account', JSON.stringify(data))
+
             loginContext(data)
             history.push('/users')
-            // window.location.reload()
         } else {
             toast.error(resData.EM)
         }
