@@ -54,6 +54,7 @@ const Login = () => {
             }
 
             loginContext(data)
+            localStorage.setItem('jwt',token)
             history.push('/users')
         } else {
             toast.error(resData.EM)
