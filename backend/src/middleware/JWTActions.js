@@ -7,7 +7,9 @@ const createJWT = (payload) => {
     let key = process.env.JWT_SERCRET
     let token = null
     try {
-        token = jwt.sign(payload, key)
+        token = jwt.sign(payload, key, {
+            expiresIn: process.env.JWT_EXPIRES_IN,
+        })
     } catch (error) {
         console.log(error)
     }
@@ -15,20 +17,20 @@ const createJWT = (payload) => {
 }
 const verifyToken = (token) => {
     let key = process.env.JWT_SERCRET
-    let data = null
+    let decoded = null
     try {
-        const decoded = jwt.verify(token, key)
-        data = decoded
+         decoded = jwt.verify(token, key)
+       
     } catch (err) {
         // err
         console.log(err)
     }
-    return data
+    return decoded
 }
 const checkUserJWT = (req, res, next) => {
-    console.log('ehcekJWT');
     if (nonSecurePaths.includes(req.path)) return next()
     let cookies = req.cookies
+   
     if (cookies && cookies.jwt) {
         let token = cookies.jwt
         let decoded = verifyToken(token)
@@ -37,25 +39,26 @@ const checkUserJWT = (req, res, next) => {
             req.token = token
             next()
         } else {
-            return {
-                EM: 'Unauthorized',
+            return res.status(401).json({
+                EM: 'Not authenticated the user',
                 EC: -1,
                 DT: '',
-            }
+            })
         }
     } else {
-        return {
-            EM: 'Unauthorized',
+        return res.status(401).json({
+            EM: 'Not authenticated the user',
             EC: -1,
             DT: '',
-        }
+        })
     }
 }
 const checkUserPermission = (req, res, next) => {
-    
-    if (nonSecurePaths.includes(req.path) || req.path === '/account') return next()
+    if (nonSecurePaths.includes(req.path) || req.path === '/account'){
+        return next()
+
+    }
     if (req.user) {
-        console.log('req');
         let email = req.user.email
         let roles = req.user.groupWithRoles.Roles
         let currentPath = req.path
@@ -63,7 +66,7 @@ const checkUserPermission = (req, res, next) => {
             return res.status(403).json({
                 EC: -1,
                 DT: '',
-                EM: 'Forbidden',
+                EM: `You dont have permission to access this resource`,
             })
         }
         let canAccess = roles.some((item) => item.url === currentPath)
@@ -73,14 +76,14 @@ const checkUserPermission = (req, res, next) => {
             return res.status(403).json({
                 EC: -1,
                 DT: '',
-                EM: 'Forbidden user',
+                EM: `You dont have permission to access this resource`,
             })
         }
     } else {
         return res.status(401).json({
             EC: -1,
             DT: '',
-            EM: 'Unauthorized user' ,
+            EM: 'Not authenticated the user user',
         })
     }
 }
