@@ -19,20 +19,28 @@ const verifyToken = (token) => {
     let key = process.env.JWT_SERCRET
     let decoded = null
     try {
-         decoded = jwt.verify(token, key)
-       
+        decoded = jwt.verify(token, key)
     } catch (err) {
         // err
         console.log(err)
     }
     return decoded
 }
+const extractToken = (req) => {
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.split(' ')[0] === 'Bearer'
+    ) {
+        return req.headers.authorization.split(' ')[1]
+    }
+    return null
+}
 const checkUserJWT = (req, res, next) => {
     if (nonSecurePaths.includes(req.path)) return next()
     let cookies = req.cookies
-   
-    if (cookies && cookies.jwt) {
-        let token = cookies.jwt
+    let tokenfromHeader = extractToken(req)
+    if ((cookies && cookies.jwt )|| tokenfromHeader) {
+        let token = cookies && cookies.jwt ? cookies.jwt : tokenfromHeader
         let decoded = verifyToken(token)
         if (decoded) {
             req.user = decoded
@@ -54,9 +62,8 @@ const checkUserJWT = (req, res, next) => {
     }
 }
 const checkUserPermission = (req, res, next) => {
-    if (nonSecurePaths.includes(req.path) || req.path === '/account'){
+    if (nonSecurePaths.includes(req.path) || req.path === '/account') {
         return next()
-
     }
     if (req.user) {
         let email = req.user.email
