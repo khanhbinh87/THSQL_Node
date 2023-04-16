@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import { Route, useHistory, Redirect } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import { UserContext } from '../Context/UserContext'
 const PrivateRoutes = (props) => {
     const { user } = useContext(UserContext)
-
+    
     if (user && user.isAuthenticated) {
         return (
             <>

@@ -1,4 +1,4 @@
-import React, {  useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { NavLink, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { loginUser } from '../../services/userService'
@@ -7,6 +7,7 @@ import './Login.scss'
 const Login = () => {
     const [valueLogin, setValueLogin] = useState('')
     const [password, setPassword] = useState('')
+    let history = useHistory()
     const defaultValue = {
         isValidLogin: true,
         isValidPassword: true,
@@ -14,9 +15,7 @@ const Login = () => {
 
     const [objValueLogin, setObjValueLogin] = useState(defaultValue)
 
-    let history = useHistory()
-
-    const { loginContext } = React.useContext(UserContext)
+    const { loginContext } = useContext(UserContext)
 
     const handleCreateNewUser = () => {
         history.push('/register')
@@ -60,6 +59,7 @@ const Login = () => {
             toast.error(resData.EM)
         }
     }
+
     return (
         <div className='login-container'>
             <div className='container'>

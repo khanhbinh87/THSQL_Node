@@ -31,7 +31,7 @@ const updateUser = (data) => {
     return axios.put('/api/v1/user/update', { ...data })
 }
 const getUserAccount = () => {
-    return axios.get('/account')
+    return axios.get('/api/v1/account')
 }
 export {
     registerNewUser,

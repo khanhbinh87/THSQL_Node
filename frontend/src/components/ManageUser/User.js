@@ -6,6 +6,7 @@ import ModalDelete from './ModalDelete'
 import { toast } from 'react-toastify'
 import ModalUser from './ModalUser'
 import './User.scss'
+
 const User = () => {
     const [listUsers, setListUsers] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
@@ -16,18 +17,11 @@ const User = () => {
     const [showModalUser, setShowModalUser] = useState(false)
     const [action, setAction] = useState('CREATE')
     const [modalUser, setModalUser] = useState('')
+  
     useEffect(() => {
-        let c = document.cookie
-            .split(';')
-            .reduce(
-                (ac, cv, i) =>
-                    Object.assign(ac, { [cv.split('=')[0]]: cv.split('=')[1] }),
-                {}
-            )
-
-       
         fetchData()
     }, [currentPage])
+
     const fetchData = async () => {
         let res = await getAllUser(currentPage, currentLimit)
 
