@@ -14,11 +14,7 @@ const UserProvider = ({ children }) => {
         setUser({ ...dataUser, isLoading: false })
     }
     const logoutContext = () => {
-        setUser({
-            isAuthenticated: false,
-            token: '',
-            account: {},
-        })
+        setUser({ ...userDefault , isLoading: false })
     }
     const fetchUser = async () => {
         let res = await getUserAccount()
@@ -40,15 +36,17 @@ const UserProvider = ({ children }) => {
 
             setUser(data)
         } else {
-            setUser({ ...userDefault, isLoading: false })
+            setUser({ ...user, isLoading: false })
         }
     }
     useEffect(() => {
         if (
-            window.location.pathname !== '/' ||
+            window.location.pathname !== '/' &&
             window.location.pathname !== '/login'
         ) {
             fetchUser()
+        } else {
+            setUser({ ...user, isLoading: false })
         }
     }, [])
 
