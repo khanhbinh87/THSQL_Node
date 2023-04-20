@@ -18,7 +18,7 @@ const getGroups = async () => {
             }
         }
     } catch (error) {
-        console.log(error)
+       
         return {
             EM: 'something wrongs with services',
             EC: 1,

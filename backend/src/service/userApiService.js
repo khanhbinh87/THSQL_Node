@@ -84,16 +84,21 @@ const createNewUser = async (data) => {
             EC: 0,
             DT: [],
         }
-    } catch (error) {}
+    } catch (error) {
+        return {
+            EM: 'something wrongs with services',
+            EC: 1,
+            DT: [],
+        }
+    }
 }
 const updateUser = async (data) => {
-
     try {
-        if(!data.groupId){
+        if (!data.groupId) {
             return {
-                EM:"Error width empty groupID",
-                EC:1,
-                DT:'group'
+                EM: 'Error width empty groupID',
+                EC: 1,
+                DT: 'group',
             }
         }
         let user = await db.User.findOne({
@@ -106,22 +111,21 @@ const updateUser = async (data) => {
             await user.update({
                 username: data.username,
                 address: data.address,
-                sex:data.sex,
-                groupId:data.groupId
+                sex: data.sex,
+                groupId: data.groupId,
             })
             return {
                 EM: 'update success ',
                 EC: 0,
-                DT: "",
+                DT: '',
             }
-        }else{
+        } else {
             return {
                 EM: 'user not found  ',
                 EC: 2,
-                DT: "",
+                DT: '',
             }
         }
-        
     } catch (error) {
         return {
             EM: 'something wrongs with service',
