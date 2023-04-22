@@ -38,7 +38,7 @@ const getAllRoles = async () => {
         let roles = await db.Role.findAll({
             attributes: ['id', 'url', 'description'],
             // raw: true,
-            order: [['id', 'DESC']]
+            order: [['id', 'DESC']],
         })
         return {
             EM: 'get role success',
@@ -83,9 +83,41 @@ const deleteRole = async (id) => {
         }
     }
 }
+const getRoleByGroup = async (id) => {
+    try {
+        if (!id) {
+            return {
+                EM: 'Not found any roles',
+                EC: 0,
+                DT: [],
+            }
+        }
+        let roles = await db.Group.findOne({
+            where: { id: id },
+            attributes: ['id', 'name', 'description'],
+            include: {
+                model: db.Role,
+                attributes: ['id', 'url', 'description'],
+            },
+            through: { attributes: [] },
+        })
+        return {
+            EM: 'Get Roles By Group success',
+            EC: 0,
+            DT: roles,
+        }
+    } catch (error) {
+        return {
+            EM: 'something went wrong service',
+            EC: -1,
+            DT: [],
+        }
+    }
+}
 module.exports = {
     createNewRole,
     getRolesWithPagination,
     getAllRoles,
     deleteRole,
+    getRoleByGroup,
 }

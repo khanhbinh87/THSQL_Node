@@ -76,7 +76,7 @@ const checkUserPermission = (req, res, next) => {
                 EM: `You dont have permission to access this resource`,
             })
         }
-        let canAccess = roles.some((item) => item.url === currentPath)
+        let canAccess = roles.some((item) => item.url === currentPath || currentPath.includes(item.url))
         if (canAccess) {
             next()
         } else {
