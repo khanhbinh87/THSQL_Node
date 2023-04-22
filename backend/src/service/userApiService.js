@@ -18,7 +18,7 @@ const getAllUser = async () => {
             }
         } else {
             return {
-                EM: 'get user success',
+                EM: 'no user',
                 EC: 0,
                 DT: [],
             }
