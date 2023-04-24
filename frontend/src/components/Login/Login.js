@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { NavLink, useHistory } from 'react-router-dom'
+import React, { useState, useContext, useEffect } from 'react'
+import { Link, NavLink, useHistory } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { loginUser } from '../../services/userService'
 import { UserContext } from '../../Context/UserContext'
@@ -15,7 +15,7 @@ const Login = () => {
 
     const [objValueLogin, setObjValueLogin] = useState(defaultValue)
 
-    const { loginContext } = useContext(UserContext)
+    const { loginContext ,user} = useContext(UserContext)
 
     const handleCreateNewUser = () => {
         history.push('/register')
@@ -54,13 +54,17 @@ const Login = () => {
             }
 
             loginContext(data)
-            localStorage.setItem('jwt',token)
+            localStorage.setItem('jwt', token)
             history.push('/users')
         } else {
             toast.error(resData.EM)
         }
     }
-
+    useEffect(()=>{
+        if(user && user.isAuthenticated === true){
+            history.push('/')
+        }
+    },[user])
     return (
         <div className='login-container'>
             <div className='container'>
@@ -127,6 +131,15 @@ const Login = () => {
                                 >
                                     Create user
                                 </button>
+                                <NavLink
+                                    to='/'
+                                    className='nav-link text-primary mt-3'
+                                >
+                                    <i
+                                        className='fa fa-undo mx-2'
+                                        aria-hidden='true'
+                                    ></i> Return to Homepage
+                                </NavLink>
                             </div>
                         </div>
                     </div>

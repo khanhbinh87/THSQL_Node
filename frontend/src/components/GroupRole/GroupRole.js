@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { fetchRoleByGroup, readRole } from '../../services/roleService'
+import { fetchRoleByGroup, readRole ,assignRoleToGroup} from '../../services/roleService'
 import { fetchGroup } from '../../services/userService'
 import _ from 'lodash'
+import { toast } from 'react-toastify'
 const GroupRole = () => {
     const [listGroup, setListGroup] = useState([])
     const [listRoles, setListRoles] = useState('')
     const [listAssign, setListAssign] = useState([])
-
+    const [selectGroup, setSelectGroup] = useState('')
     useEffect(() => {
         getGroups()
         fetchDataRoles()
@@ -25,11 +26,12 @@ const GroupRole = () => {
         }
     }
     const handleOnChangeGroup = async (value) => {
+        setSelectGroup(value)
         let res = await fetchRoleByGroup(+value)
 
         if (res && res.EC === 0) {
             let data = buildDataRolesByGroup(res.DT.Roles, listRoles)
-            console.log(data)
+
             setListAssign(data)
         }
     }
@@ -62,6 +64,32 @@ const GroupRole = () => {
         }
         setListAssign(_cloneAssign)
     }
+    const buidlDataToSave = () => {
+        let result = {}
+        let _listAssign = _.cloneDeep(listAssign)
+        result.groupId = +selectGroup
+        // console.log(_listAssign,+selectGroup);
+        let groupFilter = _listAssign.filter((item) => item.isAssigned === true)
+
+        let finalGroup = groupFilter.map((item) => {
+            return { groupId: +selectGroup, roleId: +item.id }
+        })
+        result.groupRoles = finalGroup
+
+        return result
+    }
+    const handleSave = async () => {
+        let data = buidlDataToSave()
+        let res = await assignRoleToGroup(data)
+        if(res && res.EC === 0 ){
+            toast.success(res.EM)
+        }else{
+            toast.error(res.EM)
+
+        }
+        
+    }
+
     return (
         <div className='container'>
             <h3 className='mt-3'>Group Role : </h3>
@@ -70,8 +98,10 @@ const GroupRole = () => {
                 <select
                     className='form-select'
                     onChange={(e) => handleOnChangeGroup(e.target.value)}
+                    defaultValue={selectGroup || ''}
                 >
-                    <option value=''>Please select your group</option>
+                    <option value={''}>Please select your group</option>
+
                     {listGroup &&
                         listGroup.map((item, index) => {
                             return (
@@ -83,35 +113,39 @@ const GroupRole = () => {
                 </select>
             </div>
             <hr></hr>
-            <h4>Assign Role : </h4>
+            {selectGroup && (
+                <div>
+                    <h4>Assign Role : </h4>
 
-            <div>
-                {listAssign &&
-                    listAssign.length > 0 &&
-                    listAssign.map((item, index) => {
-                        return (
-                            <div
-                                className='form-check'
-                                key={`list-roles-${index}`}
-                            >
-                                <input
-                                    className='form-check-input'
-                                    type='checkbox'
-                                    id={item.id}
-                                    checked={item.isAssigned}
-                                    defaultValue={item.id}
-                                    onChange={(e) =>
-                                        handleChangeAssign(e.target.value)
-                                    }
-                                />
-                                <label className='role' htmlFor={item.id}>
-                                    {item.url}
-                                </label>
-                            </div>
-                        )
-                    })}
-            </div>
-            <button className='btn btn-warning'>Save</button>
+                    {listAssign &&
+                        listAssign.length > 0 &&
+                        listAssign.map((item, index) => {
+                            return (
+                                <div
+                                    className='form-check'
+                                    key={`list-roles-${index}`}
+                                >
+                                    <input
+                                        className='form-check-input'
+                                        type='checkbox'
+                                        id={item.id}
+                                        checked={item.isAssigned}
+                                        defaultValue={item.id}
+                                        onChange={(e) =>
+                                            handleChangeAssign(e.target.value)
+                                        }
+                                    />
+                                    <label className='role' htmlFor={item.id}>
+                                        {item.url}
+                                    </label>
+                                </div>
+                            )
+                        })}
+                </div>
+            )}
+            <button className='btn btn-warning' onClick={() => handleSave()}>
+                Save
+            </button>
         </div>
     )
 }

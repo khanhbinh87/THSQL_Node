@@ -6,7 +6,9 @@ const instance = axios.create({
 })
 
 // Alter defaults after instance has been created
-instance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt')}`
+instance.defaults.headers.common[
+    'Authorization'
+] = `Bearer ${localStorage.getItem('jwt')}`
 
 instance.defaults.withCredentials = true
 instance.interceptors.request.use(
@@ -31,47 +33,54 @@ instance.interceptors.response.use(
     function (error) {
         // Any status codes that falls outside the range of 2xx cause this function to trigger
         // Do something with response error
-        const status =  error.response?.status || 500
+        const status = error.response?.status || 500
         // we can handle global errors here
         switch (status) {
             // authentication (token related issues)
             case 401: {
-                toast.error('Unauthorized the user . Please login ...')
-                return error.response.data;
+                if (
+                    window.location.pathname !== '/' &&
+                    window.location.pathname !== '/login' &&
+                    window.location.pathname !== '/register'
+                ) {
+                    toast.error('Unauthorized the user . Please login ...')
+                }
+                return error.response.data
             }
 
             // forbidden (permission related issues)
             case 403: {
-                toast.error('You dont have the permission to access this resource.....')
-                return  Promise.reject(error)
+                toast.error(
+                    'You dont have the permission to access this resource.....'
+                )
+                return Promise.reject(error)
             }
 
             // bad request
             case 400: {
-                return  Promise.reject(error)
+                return Promise.reject(error)
             }
 
             // not found
             case 404: {
-                return  Promise.reject(error)
+                return Promise.reject(error)
             }
 
             // conflict
             case 409: {
-                return  Promise.reject(error)
+                return Promise.reject(error)
             }
 
             // unprocessable
             case 422: {
-                return  Promise.reject(error)
+                return Promise.reject(error)
             }
 
             // generic api error (server related) unexpected
             default: {
-                return  Promise.reject(error)
+                return Promise.reject(error)
             }
         }
-        
     }
 )
 export default instance

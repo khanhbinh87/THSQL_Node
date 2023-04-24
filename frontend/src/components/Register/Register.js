@@ -1,10 +1,17 @@
-import React, {  useState } from 'react'
+import React, { useState ,useContext,useEffect} from 'react'
 import './Register.scss'
 import { useHistory } from 'react-router-dom'
-
+import {UserContext} from '../../Context/UserContext'
 import { toast } from 'react-toastify'
 import { registerNewUser } from '../../services/userService'
 const Register = () => {
+    const {  user } = useContext(UserContext)
+
+    useEffect(() => {
+        if (user && user.isAuthenticated === true) {
+            history.push('/')
+        }
+    }, [user])
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')

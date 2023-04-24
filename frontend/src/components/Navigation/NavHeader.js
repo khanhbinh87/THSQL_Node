@@ -30,7 +30,7 @@ const NavHeader = () => {
             <>
                 <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
                     <Container>
-                        <Navbar.Brand to='/'>
+                        <NavLink to='/' className="navbar-brand">
                             <img
                                 src={logo}
                                 width='30'
@@ -39,7 +39,7 @@ const NavHeader = () => {
                                 alt='logo'
                             />
                             React
-                        </Navbar.Brand>
+                        </NavLink>
                         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
                         <Navbar.Collapse id='responsive-navbar-nav'>
                             <Nav className='me-auto'>
