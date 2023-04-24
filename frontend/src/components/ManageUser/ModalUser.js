@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import './User.scss'
+import { UserContext } from '../../Context/UserContext'
 import {
     createNewUser,
     fetchGroup,
@@ -11,6 +12,7 @@ import { toast } from 'react-toastify'
 import _ from 'lodash'
 const ModalUser = (props) => {
     const { handleUserClose, show, action, modalUser } = props
+
 
     const defaultUserData = {
         email: '',
@@ -54,9 +56,9 @@ const ModalUser = (props) => {
     const getGroups = async () => {
         let res = await fetchGroup()
 
-        if (res &&  res.EC === 0) {
+        if (res && res.EC === 0) {
             setUserGroups(res.DT)
-            if (res &&  res.DT.length > 0) {
+            if (res && res.DT.length > 0) {
                 let groups = res.DT
                 setuserData({ ...userData, group: groups[0].id })
             }
@@ -120,6 +122,10 @@ const ModalUser = (props) => {
                 setInputValue(validInput)
             }
         }
+
+     
+
+        
     }
 
     const hideModal = () => {

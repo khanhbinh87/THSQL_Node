@@ -7,17 +7,18 @@ import { toast } from 'react-toastify'
 import ModalUser from './ModalUser'
 import './User.scss'
 
+
 const User = () => {
     const [listUsers, setListUsers] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const [currentLimit, setCurrentLimit] = useState(5)
+    const [currentLimit, setCurrentLimit] = useState(3)
     const [totalPages, setTotalPages] = useState(0)
     const [show, setShow] = useState(false)
     const [userDelete, setUserDelete] = useState({})
     const [showModalUser, setShowModalUser] = useState(false)
     const [action, setAction] = useState('CREATE')
-    const [modalUser, setModalUser] = useState('')
-  
+    const [modalUser, setModalUser] = useState({})
+
     useEffect(() => {
         fetchData()
     }, [currentPage])
@@ -26,13 +27,12 @@ const User = () => {
         let res = await getAllUser(currentPage, currentLimit)
 
         if (res && res.EC === 0) {
-            
             setTotalPages(res.DT.totalPages)
-            if(res.DT.totalPages > 0 && res.DT.users.length === 0){
+            if (res.DT.totalPages > 0 && res.DT.users.length === 0) {
                 setCurrentPage(+res.DT.totalPages)
-                await getAllUser(+res.DT.totalPages,currentLimit)
+                await getAllUser(+res.DT.totalPages, currentLimit)
             }
-            if(res.DT.totalPages > 0 && res.DT.users.length > 0){
+            if (res.DT.totalPages > 0 && res.DT.users.length > 0) {
                 setListUsers(res.DT.users)
             }
         }
@@ -69,6 +69,7 @@ const User = () => {
         setAction('UPDATE')
         setShowModalUser(true)
         setModalUser(item)
+
     }
     const handleRefresh = async () => {
         await fetchData()

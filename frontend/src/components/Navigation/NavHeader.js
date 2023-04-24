@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import './Nav.scss'
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom'
 import { UserContext } from '../../Context/UserContext'
@@ -13,6 +13,9 @@ import { toast } from 'react-toastify'
 const NavHeader = () => {
     let location = useLocation()
     let { user, logoutContext } = useContext(UserContext)
+
+   
+
     const history = useHistory()
     const handleLogout = async () => {
         let data = await logOutUser() //clear cookies
@@ -30,7 +33,7 @@ const NavHeader = () => {
             <>
                 <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
                     <Container>
-                        <NavLink to='/' className="navbar-brand">
+                        <NavLink to='/' className='navbar-brand'>
                             <img
                                 src={logo}
                                 width='30'
@@ -53,7 +56,7 @@ const NavHeader = () => {
                                     Roles
                                 </NavLink>
                                 <NavLink to='/group-role' className='nav-link'>
-                                   Group-Role
+                                    Group-Role
                                 </NavLink>
                                 <NavLink to='/projects' className='nav-link'>
                                     Projects
@@ -88,7 +91,9 @@ const NavHeader = () => {
                                         </NavDropdown>
                                     </>
                                 ) : (
-                                    <Link className='nav-link' to="/login">Login</Link>
+                                    <Link className='nav-link' to='/login'>
+                                        Login
+                                    </Link>
                                 )}
                             </Nav>
                         </Navbar.Collapse>

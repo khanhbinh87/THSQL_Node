@@ -14,7 +14,7 @@ const UserProvider = ({ children }) => {
         setUser({ ...dataUser, isLoading: false })
     }
     const logoutContext = () => {
-        setUser({ ...userDefault , isLoading: false })
+        setUser({ ...userDefault, isLoading: false })
     }
     const fetchUser = async () => {
         let res = await getUserAccount()
@@ -40,7 +40,6 @@ const UserProvider = ({ children }) => {
         }
     }
     useEffect(() => {
-      
         fetchUser()
     }, [])
 
